@@ -1,6 +1,6 @@
 Name:           userspace-rcu
 Version:        0.4.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        RCU (read-copy-update) implementation in user space
 
 Group:          System Environment/Libraries
@@ -105,6 +105,9 @@ tests/test_urcu_yield $READERS $WRITERS $DURATION
 
 
 %changelog
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
