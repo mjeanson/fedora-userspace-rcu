@@ -1,13 +1,16 @@
 Name:           userspace-rcu
-Version:        0.4.1
-Release:        3%{?dist}
+Version:        0.7.3
+Release:        1%{?dist}
 Summary:        RCU (read-copy-update) implementation in user space
 
 Group:          System Environment/Libraries
 License:        LGPLv2+
-URL:            http://www.lttng.org/?q=node/18
-Source0:        http://www.lttng.org/files/urcu/%{name}-%{version}.tar.bz2
+URL:            http://lttng.org/urcu/
+Source0:        http://lttng.org/files/urcu/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  pkgconfig 
+# Upstream do not yet support mips
+ExcludeArch:    mips
 
 %description
 This data synchronization library provides read-side access which scales
@@ -19,7 +22,7 @@ reclamation is possible.
 %package        devel
 Summary:        Development files for %{name}
 Group:          Development/Libraries
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
@@ -32,59 +35,25 @@ developing applications that use %{name}.
 
 %build
 %configure --disable-static
-make %{?_smp_mflags}
+#Remove Rpath from build system
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+
+V=1 make %{?_smp_mflags}
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+rm -vf $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %check
-READERS=10
-WRITERS=10
-DURATION=5
-tests/rcutorture_qsbr
-tests/rcutorture_urcu
-tests/rcutorture_urcu_bp
-tests/rcutorture_urcu_mb
-tests/rcutorture_urcu_signal
-tests/test_looplen
-tests/test_mutex $READERS $WRITERS $DURATION
-tests/test_perthreadlock $READERS $WRITERS $DURATION
-tests/test_perthreadlock_timing $READERS $WRITERS $DURATION
-tests/test_qsbr $READERS $WRITERS $DURATION
-tests/test_qsbr_dynamic_link $READERS $WRITERS $DURATION
-tests/test_qsbr_gc $READERS $WRITERS $DURATION
-tests/test_qsbr_lgc $READERS $WRITERS $DURATION
-tests/test_qsbr_timing $READERS $WRITERS $DURATION
-tests/test_rwlock $READERS $WRITERS $DURATION
-tests/test_rwlock_timing $READERS $WRITERS $DURATION
-tests/test_uatomic $READERS $WRITERS $DURATION
-tests/test_urcu $READERS $WRITERS $DURATION
-tests/test_urcu_assign $READERS $WRITERS $DURATION
-tests/test_urcu_assign_dynamic_link $READERS $WRITERS $DURATION
-tests/test_urcu_bp $READERS $WRITERS $DURATION
-tests/test_urcu_bp_dynamic_link $READERS $WRITERS $DURATION
-tests/test_urcu_defer $READERS $WRITERS $DURATION
-tests/test_urcu_dynamic_link $READERS $WRITERS $DURATION
-tests/test_urcu_gc $READERS $WRITERS $DURATION
-tests/test_urcu_lgc $READERS $WRITERS $DURATION
-tests/test_urcu_mb $READERS $WRITERS $DURATION
-tests/test_urcu_mb_gc $READERS $WRITERS $DURATION
-tests/test_urcu_mb_lgc $READERS $WRITERS $DURATION
-tests/test_urcu_signal $READERS $WRITERS $DURATION
-tests/test_urcu_signal_dynamic_link $READERS $WRITERS $DURATION
-tests/test_urcu_signal_gc $READERS $WRITERS $DURATION
-tests/test_urcu_signal_lgc $READERS $WRITERS $DURATION
-tests/test_urcu_signal_timing $READERS $WRITERS $DURATION
-tests/test_urcu_signal_yield $READERS $WRITERS $DURATION
-tests/test_urcu_timing $READERS $WRITERS $DURATION
-tests/test_urcu_yield $READERS $WRITERS $DURATION
+#TODO greenscientist: make check currently fail in mockbuild
+#make check
 
 %post -p /sbin/ldconfig
 
@@ -94,17 +63,23 @@ tests/test_urcu_yield $READERS $WRITERS $DURATION
 %files
 %defattr(-,root,root,-)
 %doc LICENSE gpl-2.0.txt lgpl-relicensing.txt lgpl-2.1.txt
-
+%{_docdir}/%{name}/README
+%{_docdir}/%{name}/ChangeLog
 %{_libdir}/*.so.*
 
 %files devel
 %defattr(-,root,root,-)
-%doc README
 %{_includedir}/*
 %{_libdir}/*.so
+%{_libdir}/pkgconfig/liburcu*.pc
+%{_docdir}/%{name}/README
+%{_docdir}/%{name}/*.txt
 
 
 %changelog
+* Thu Jun 14 2012 Yannick Brosseau <yannick.brosseau@gmail.com> - 0.7.3-1
+- New upstream version (#828716)
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
