@@ -1,5 +1,5 @@
 Name:           userspace-rcu
-Version:        0.7.6
+Version:        0.7.7
 Release:        1%{?dist}
 Summary:        RCU (read-copy-update) implementation in user space
 
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 05 2013 Yannick Brosseau <yannick.brosseau@gmail.com> - 0.7.7-1
+- New upstream version
+
 * Fri Jan 18 2013 Yannick Brosseau <yannick.brosseau@gmail.com> - 0.7.6-1
 - New upstream version
 
