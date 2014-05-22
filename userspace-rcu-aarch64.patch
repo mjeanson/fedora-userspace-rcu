@@ -1,0 +1,25 @@
+Index: userspace-rcu-0.8.1/configure
+===================================================================
+--- userspace-rcu-0.8.1.orig/configure
++++ userspace-rcu-0.8.1/configure
+@@ -12685,6 +12685,8 @@ case $host_cpu in #(
+     ARCHTYPE="mips" ;; #(
+   tile*) :
+     ARCHTYPE="gcc" ;; #(
++  aarch64) :
++    ARCHTYPE="gcc" ;; #(
+   *) :
+     ARCHTYPE="unknown"
+  ;;
+Index: userspace-rcu-0.8.1/configure.ac
+===================================================================
+--- userspace-rcu-0.8.1.orig/configure.ac
++++ userspace-rcu-0.8.1/configure.ac
+@@ -79,6 +79,7 @@ AS_CASE([$host_cpu],
+ 	[arm*], [ARCHTYPE="arm"],
+ 	[mips*], [ARCHTYPE="mips"],
+ 	[tile*], [ARCHTYPE="gcc"],
++	[aarch64], [ARCHTYPE="gcc"],
+ 	[ARCHTYPE="unknown"]
+ )
+ 
