@@ -1,6 +1,6 @@
 Name:           userspace-rcu
 Version:        0.8.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        RCU (read-copy-update) implementation in user space
 
 Group:          System Environment/Libraries
@@ -8,6 +8,7 @@ License:        LGPLv2+
 URL:            http://lttng.org/urcu/
 Source0:        http://lttng.org/files/urcu/%{name}-%{version}.tar.bz2
 Patch0:         userspace-rcu-aarch64.patch
+BuildRequires:  autoconf automake libtool
 BuildRequires:  pkgconfig 
 # Upstream do not yet support mips
 ExcludeArch:    mips
@@ -35,6 +36,8 @@ developing applications that use %{name}.
 
 
 %build
+# Patch for AArch64 and PPC64LE needs it
+autoreconf -vif
 %configure --disable-static
 #Remove Rpath from build system
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
@@ -72,6 +75,9 @@ rm -vf $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %changelog
+* Thu May 22 2014 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 0.8.1-3
+- Use upstream patch for aarch64 (includes ppc64le too)
+
 * Thu May 22 2014 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 0.8.1-2
 - Added AArch64 support
 
