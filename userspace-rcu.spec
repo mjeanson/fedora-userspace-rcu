@@ -1,6 +1,6 @@
 Name:           userspace-rcu
-Version:        0.8.1
-Release:        5%{?dist}
+Version:        0.8.5
+Release:        1%{?dist}
 Summary:        RCU (read-copy-update) implementation in user space
 
 Group:          System Environment/Libraries
@@ -75,6 +75,9 @@ rm -vf $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %changelog
+* Sun Nov 02 2014 Suchakra Sharma <suchakra@fedoraproject.org> - 0.8.5-1
+- New upstream release
+
 * Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
