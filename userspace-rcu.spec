@@ -1,6 +1,6 @@
 Name:           userspace-rcu
 Version:        0.8.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        RCU (read-copy-update) implementation in user space
 
 Group:          System Environment/Libraries
@@ -75,6 +75,9 @@ rm -vf $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %changelog
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Thu Feb 26 2015 Scott Tsai <scottt.tw@gmail.com> - 0.8.6-1
 - New upstream release
 
