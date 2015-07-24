@@ -1,6 +1,6 @@
 Name:           userspace-rcu
-Version:        0.8.6
-Release:        2%{?dist}
+Version:        0.8.7
+Release:        1%{?dist}
 Summary:        RCU (read-copy-update) implementation in user space
 
 Group:          System Environment/Libraries
@@ -36,12 +36,11 @@ developing applications that use %{name}.
 
 
 %build
+#Reinitialize libtool with the fedora version to remove Rpath
+libtoolize -cvfi
 # Patch for AArch64 and PPC64LE needs it
 autoreconf -vif
 %configure --disable-static
-#Remove Rpath from build system
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 V=1 make %{?_smp_mflags}
 
@@ -52,8 +51,7 @@ rm -vf $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %check
-#TODO greenscientist: make check currently fail in mockbuild
-#make check
+make check
 
 %post -p /sbin/ldconfig
 
@@ -75,6 +73,9 @@ rm -vf $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %changelog
+* Thu Jul 23 2015 Michael Jeanson <mjeanson@gmail.com> - 0.8.7-1
+- New upstream release
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
