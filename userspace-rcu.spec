@@ -1,5 +1,5 @@
 Name:           userspace-rcu
-Version:        0.7.9
+Version:        0.7.16
 Release:        1%{?dist}
 Summary:        RCU (read-copy-update) implementation in user space
 
@@ -70,6 +70,9 @@ rm -vf $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %changelog
+* Mon Dec 07 2015 Michael Jeanson <mjeanson@efficios.com> 0.7.16-1
+- Update to 0.7.16
+
 * Sat Jan 18 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.7.9-1
 - Update to 0.7.9
 
