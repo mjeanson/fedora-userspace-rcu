@@ -1,6 +1,6 @@
 Name:           userspace-rcu
 Version:        0.8.6
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        RCU (read-copy-update) implementation in user space
 
 Group:          System Environment/Libraries
@@ -61,12 +61,11 @@ rm -vf $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %files
-%doc LICENSE gpl-2.0.txt lgpl-relicensing.txt lgpl-2.1.txt
-%{_docdir}/%{name}/README
-%{_docdir}/%{name}/ChangeLog
+%doc ChangeLog LICENSE README gpl-2.0.txt lgpl-relicensing.txt lgpl-2.1.txt
 %{_libdir}/*.so.*
 
 %files devel
+%doc %{_pkgdocdir}/examples
 %{_includedir}/*
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/liburcu*.pc
@@ -75,6 +74,9 @@ rm -vf $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %changelog
+* Sun May 15 2016 Yaakov Selkowitz <yselkowi@redhat.com> - 0.8.6-4
+- Fix %%doc usage (#1001239)
+
 * Fri Feb 05 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0.8.6-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
