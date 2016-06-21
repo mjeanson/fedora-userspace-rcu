@@ -1,17 +1,14 @@
 Name:           userspace-rcu
-Version:        0.8.6
-Release:        4%{?dist}
+Version:        0.9.2
+Release:        1%{?dist}
 Summary:        RCU (read-copy-update) implementation in user space
 
 Group:          System Environment/Libraries
 License:        LGPLv2+
-URL:            http://lttng.org/urcu/
+URL:            http://liburcu.org
 Source0:        http://lttng.org/files/urcu/%{name}-%{version}.tar.bz2
-Patch0:         userspace-rcu-aarch64.patch
-BuildRequires:  autoconf automake libtool
-BuildRequires:  pkgconfig 
-# Upstream do not yet support mips
-ExcludeArch:    mips
+BuildRequires:  pkgconfig
+BuildRequires:  perl-Test-Harness
 
 %description
 This data synchronization library provides read-side access which scales
@@ -32,17 +29,10 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
-%patch0 -p1
 
 
 %build
-# Patch for AArch64 and PPC64LE needs it
-autoreconf -vif
 %configure --disable-static
-#Remove Rpath from build system
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-
 V=1 make %{?_smp_mflags}
 
 
@@ -52,16 +42,14 @@ rm -vf $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %check
-#TODO greenscientist: make check currently fail in mockbuild
-#make check
+make check
 
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
 
 
 %files
-%doc ChangeLog LICENSE README gpl-2.0.txt lgpl-relicensing.txt lgpl-2.1.txt
+%doc ChangeLog LICENSE README.md gpl-2.0.txt lgpl-relicensing.txt lgpl-2.1.txt
 %{_libdir}/*.so.*
 
 %files devel
@@ -69,11 +57,16 @@ rm -vf $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_includedir}/*
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/liburcu*.pc
-%{_docdir}/%{name}/README
-%{_docdir}/%{name}/*.txt
+%{_docdir}/%{name}/cds-api.md
+%{_docdir}/%{name}/rcu-api.md
+%{_docdir}/%{name}/uatomic-api.md
 
 
 %changelog
+* Tue Jun 21 2016 Michael Jeanson <mjeanson@efficios.com> - 0.9.2-1
+- New upstream release
+- Dropped aarch64 patch merged upstream
+
 * Sun May 15 2016 Yaakov Selkowitz <yselkowi@redhat.com> - 0.8.6-4
 - Fix %%doc usage (#1001239)
 
